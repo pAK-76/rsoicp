@@ -1,0 +1,15 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+GET		/users						controllers.Application.users()
+GET     /tokens                     controllers.Application.tokens()
+
+GET    /auth/google/                controllers.Application.loginWithGoogleCode(state, code)
+GET    /auth/google/state           controllers.Application.login()
+GET    /auth/logout                 controllers.Application.logout()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
