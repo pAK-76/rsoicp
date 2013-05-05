@@ -7,6 +7,9 @@ GET     /                           controllers.Application.index()
 GET		/users						controllers.Application.users()
 GET     /tokens                     controllers.Application.tokens()
 
+GET     /feedback                   controllers.FeedbackController.feedback()
+POST    /feedback                   controllers.FeedbackController.sendFeedback()
+
 GET    /auth/google/                controllers.Application.loginWithGoogleCode(state, code)
 GET    /auth/google/state           controllers.Application.login()
 GET    /auth/logout                 controllers.Application.logout()

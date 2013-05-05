@@ -65,7 +65,7 @@ public class Application extends Controller {
 
     public static Result login() {
         String clientId = "30183080371.apps.googleusercontent.com";
-        String redirectUri = "http://rsoi.ru:9000/auth/google/";
+        String redirectUri = "http://localhost:9000/auth/google/";
         String scope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
         String state = "testState";
         String url = String.format("https://accounts.google.com/o/oauth2/auth?" +
@@ -84,7 +84,7 @@ public class Application extends Controller {
     {
         String url = "https://accounts.google.com/o/oauth2/token";
         String clientId = "30183080371.apps.googleusercontent.com";
-        String redirectUri = "http://rsoi.ru:9000/auth/google/";
+        String redirectUri = "http://localhost:9000/auth/google/";
         String clientSecret = "lMqSSqjm7afQmlrj7kBDHzyh";
         String body = String.format("code=%s&" +
                 "client_id=%s&" +
@@ -124,6 +124,7 @@ public class Application extends Controller {
         innerToken.save();
         session("access_token", innerToken.token);
 
+//        return ok("");
         return redirect("/");
     }
     public static Result logout()

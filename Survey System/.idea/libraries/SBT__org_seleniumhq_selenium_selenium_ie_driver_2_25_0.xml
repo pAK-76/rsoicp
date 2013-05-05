@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="SBT: org.seleniumhq.selenium:selenium-ie-driver:2.25.0">
     <CLASSES>
-      <root url="jar:///opt/local/play-2.1.0/repository/local/org.seleniumhq.selenium/selenium-ie-driver/2.25.0/jars/selenium-ie-driver.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../play/repository/local/org.seleniumhq.selenium/selenium-ie-driver/2.25.0/jars/selenium-ie-driver.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

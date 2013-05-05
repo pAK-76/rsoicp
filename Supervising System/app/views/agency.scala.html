@@ -1,0 +1,36 @@
+@(agencies: List[Agency])
+
+@main("Список агентств") {
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Название</th>
+                <th>Адрес</th>
+                <th>Средняя оценка</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <form action="agency/add" method="POST">
+                <tr>
+                    <td></td>
+                    <td><input name="name" placeholder="Новое агентство" /></td>
+                    <td><input name="address" placeholder="Новый адрес" /></td>
+                    <td></td>
+                    <td><input type="submit" value="Добавить"></td>
+                </tr>
+            </form>
+
+            @for(agency <- agencies) {
+            <tr>
+                <td>@agency.id</td>
+                <td>@agency.name</td>
+                <td>@agency.address</td>
+                <td><a href="agency/@agency.id">n/a</a></td>
+                <td><a href="/agency/delete/@agency.id">Удалить</a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}

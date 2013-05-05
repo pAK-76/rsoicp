@@ -7,5 +7,15 @@ GET     /                           controllers.Application.index()
 POST    /login                      controllers.Application.login()
 GET     /logout                     controllers.Application.logout()
 
+GET     /agency                     controllers.AgencyController.getList()
+POST    /agency/add                 controllers.AgencyController.add()
+GET     /agency/delete              controllers.AgencyController.delete(id: Integer)
+GET     /agency/:id                 controllers.AgencyController.reviews(id: Integer)
+
+POST    /agency/:id/generate        controllers.AgencyController.generate(id: Integer)
+GET     /review/delete/:id          controllers.AgencyController.deleteReview(id: Integer)
+
+GET     /feedback                   controllers.AgencyController.updateReviews()
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

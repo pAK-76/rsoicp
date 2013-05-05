@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="SBT: ch.qos.logback:logback-classic:1.0.7">
     <CLASSES>
-      <root url="jar:///opt/local/play-2.1.0/repository/local/ch.qos.logback/logback-classic/1.0.7/jars/logback-classic.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../play/repository/local/ch.qos.logback/logback-classic/1.0.7/jars/logback-classic.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
