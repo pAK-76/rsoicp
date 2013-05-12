@@ -53,6 +53,9 @@ public class FeedbackController extends Controller {
     }
 
     public static Result sendFeedback() {
+        if (!session().containsKey("access_token"))      {
+            return redirect("/");
+        }
         Form<Feedback> form = Form.form(Feedback.class);
         Feedback fb = form.bindFromRequest().get();
 
@@ -65,7 +68,7 @@ public class FeedbackController extends Controller {
         Map<String, Object> dict = new HashMap<String, Object>();
         dict.put("text", fb.text);
         dict.put("value", fb.value);
-        dict.put("id", fb.id);
+        dict.put("agencyId", fb.id);
         dict.put("author", Play.application().configuration().getString("smtp.user"));
         JsonNode jsonNode = toJson(dict);
         String jsonString = jsonNode.toString();

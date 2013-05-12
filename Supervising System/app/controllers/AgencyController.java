@@ -15,6 +15,9 @@ import java.util.*;
 import javax.activation.DataHandler;
 import javax.mail.*;
 
+import org.codehaus.jackson.JsonNode;
+import static play.libs.Json.fromJson;
+import static play.libs.Json.parse;
 import static play.libs.Json.toJson;
 
 /**
@@ -100,8 +103,9 @@ public class AgencyController extends Controller {
             Integer value = (variation > 0) ? mean - variation + randomGenerator.nextInt(2*variation+1) : mean;
             review.value = value;
             review.text = "Lorem ipsum dolores amet";
-            review.email = "abyrvalg" + i + "@rsoi.ru";
+            review.author = "abyrvalg" + i + "@rsoi.ru";
             review.agencyId = id;
+            review.moderated = true;
             review.save();
         }
 
@@ -115,16 +119,32 @@ public class AgencyController extends Controller {
         Review review = Review.find.byId(id);
         Integer agencyId = review.agencyId;
         review.delete();
+        Map<String, String[]> qs = request().queryString();
+        String[] redirectArr = qs.get("redirect");
+        String redirect;
+        if (redirectArr == null) {
+            redirect = "/agency/" + agencyId;
+        } else {
+            redirect = redirectArr[0];
+        }
 
-        return redirect("/agency/" + agencyId);
+        return redirect(redirect);
+    }
+    public static Result approveReview(Integer id) {
+        if (!session().containsKey("auth"))      {
+            return redirect("/");
+        }
+        Review review = Review.find.byId(id);
+        review.moderated = true;
+        review.save();
+
+        return redirect("/feedback");
     }
 
     public static Result updateReviews() {
         if (!session().containsKey("auth"))      {
             return redirect("/");
         }
-
-        String result = "Новые отзывы:\n";
 
         Properties props = new Properties();
 
@@ -164,12 +184,18 @@ public class AgencyController extends Controller {
                             if (disposition != null && (disposition.equals(BodyPart.ATTACHMENT))) {
                                 // Do nothing, there should be no disposition
                             } else {
+
                                 String s = (String) bodyPart.getContent();
-                                result += i + ". " + s + "\n";
+
+                                JsonNode node = parse(s);
+
+                                Review review = fromJson(node, Review.class);
+                                review.moderated = false;
+                                review.save();
                             }
                         }
                     } catch (Exception ex) {
-
+                        System.out.println(ex.getMessage());
                     }
                 }
                 if (readMessage==null || messages[i].getMessageNumber() > readMessage) {
@@ -182,6 +208,7 @@ public class AgencyController extends Controller {
             System.out.println(ex.getMessage());
         }
 
-        return ok(result);
+        List<Review> result =  Review.find.where(Expr.eq("moderated", false)).findList();
+        return ok(moderate.render(result));
     }
 }

@@ -25,14 +25,17 @@ public class Agency extends Model {
 
     public String name;
     public String address;
+    public String email;
 
     public Double mean() {
-        List<Review> list = Review.find.select("AVG(value)").where(Expr.eq("agencyId", this.id)).findList();
+        List<Review> list = Review.find.select("value").where(Expr.and(Expr.eq("agencyId", this.id), Expr.eq("moderated", true))).findList();
         Double result = 0.0;
         for(Integer i=0; i < list.size(); ++i) {
             result += list.get(i).value;
         }
-        result /= list.size();
+        if(list.size() > 0) {
+            result /= list.size();
+        }
 
         return result;
 //        Review.find.setQuery("SELECT AVG(r.value) from Review r WHERE agencyId=" + this.id).fetch()

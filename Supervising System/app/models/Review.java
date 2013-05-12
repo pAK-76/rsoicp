@@ -19,9 +19,10 @@ public class Review extends Model{
     public Integer id;
 
     public Integer agencyId;
-    public String email;
+    public String author;
     public String text;
     public int value;
+    public Boolean moderated;
 
     public static Finder<Integer,Review> find = new Finder<Integer, Review>(
             Integer.class, Review.class

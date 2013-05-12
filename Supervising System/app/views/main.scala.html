@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(user: String, title: String)(content: Html)
 
 <!DOCTYPE html>
 
@@ -52,6 +52,9 @@
             </div>
             <div class="right">
                 <h1>Контролирующая ассоциация &laquo;Дятел&raquo;</h1>
+                @if(user != null) {
+                    <div style="text-align: right;">Вы вошли как <b>@user</b> <a href="/logout">Выйти</a></div>
+                }
             </div>
         </div>
         <div class="content clear">

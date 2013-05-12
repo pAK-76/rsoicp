@@ -1,7 +1,13 @@
-@(message: String)
+@(email: String)
 
-@main("Welcome to Play 2.1") {
-    
-    @play20.welcome(message, style = "Java")
+@main(email, "Добро пожаловать в рекрутинговую систему Бобёр") {
+
+<p>
+    Спасибо, что пользуетесь услугами агентства &laquo;Бобёр&raquo;! Что вы можете сделать:
+</p>
+<ul>
+    <li><a href="/logout">Выйти</a></li>
+    <li>&nbsp;</li>
+</ul>
     
 }

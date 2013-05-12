@@ -1,0 +1,52 @@
+@(employee: Employee, error: String)
+
+@main(null, "Регистрация") {
+    <form action="/register" method="POST">
+        <table style="width: 60%; margin: 0 auto;">
+            <tbody>
+            <tr>
+                <td class="ralign">Email:</td>
+                <td><input name="email" @if(employee!=null){value="@employee.email"} /></td>
+            </tr>
+            <tr>
+                <td class="ralign">Пароль:</td>
+                <td><input type="password" name="password" /></td>
+            </tr>
+            <tr>
+                <td class="ralign">Имя:</td>
+                <td><input type="text" name="firstName" /></td>
+            </tr>
+            <tr>
+                <td class="ralign">Фамилия:</td>
+                <td><input type="text" name="lastName" /></td>
+            </tr>
+            <tr>
+                <td class="ralign">Дата рождения:</td>
+                <td><input type="date" name="birthDate"  @if(employee!=null){value="@employee.birthDate"}/></td>
+            </tr>
+            <tr>
+                <td class="ralign">Город:</td>
+                <td><input type="text" name="city" /></td>
+            </tr>
+            <tr>
+                <td class="ralign">Профессия:</td>
+                <td><input type="text" name="job" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <textarea style="width: 100%; resize: none;" name="features" placeholder="Ключевые навыки"></textarea>
+                </td>
+            </tr>
+            @if(error!=null) {
+            <tr>
+                <td colspan="2">@error</td>
+            </tr>
+            }
+            <tr>
+                <td class="ralign">&nbsp;</td>
+                <td><input type="submit" value="Зарегистрировать резюме" /></td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+}

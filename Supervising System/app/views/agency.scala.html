@@ -1,12 +1,13 @@
 @(agencies: List[Agency])
 
-@main("Список агентств") {
+@main("admin", "Список агентств") {
     <table style="width: 100%;">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Название</th>
                 <th>Адрес</th>
+                <th>Email</th>
                 <th>Средняя оценка</th>
                 <th></th>
             </tr>
@@ -17,6 +18,7 @@
                     <td></td>
                     <td><input name="name" placeholder="Новое агентство" /></td>
                     <td><input name="address" placeholder="Новый адрес" /></td>
+                    <td><input name="email" placeholder="Новый email" /></td>
                     <td></td>
                     <td><input type="submit" value="Добавить"></td>
                 </tr>
@@ -26,7 +28,8 @@
             <tr>
                 <td>@agency.id</td>
                 <td>@agency.name</td>
-                <td>@agency.address</td>
+                <td><a href="@agency.address">@agency.address</a></td>
+                <td>@agency.email</td>
                 <td><a href="agency/@agency.id">@agency.mean()</a></td>
                 <td><a href="/agency/delete/@agency.id">Удалить</a></td>
             </tr>

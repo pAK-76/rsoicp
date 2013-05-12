@@ -19,5 +19,6 @@ public class Agency {
 
     public String name;
     public String address;
+    public String email;
     public int trust;
 }
