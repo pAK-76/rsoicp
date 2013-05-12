@@ -1,6 +1,13 @@
+@(agencies: List[Agency])
+
 @main("Отзыв") {
 
 <form method="POST" action="/feedback">
+    <select name="id">
+        @for(agency <- agencies) {
+            <option value="@agency.id">@agency.name</option>
+        }
+    </select>
     <input type="range" name="value" min="1" max="10" value="6" /><input id="textValue" readonly value="6" /><br />
     <textarea name="text"></textarea><br />
     <input type="submit" value="Отправить" />

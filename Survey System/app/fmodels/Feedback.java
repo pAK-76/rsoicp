@@ -12,4 +12,5 @@ import play.db.ebean.Model;
 public class Feedback extends Model {
     public String text;
     public int value;
+    public Integer id;
 }

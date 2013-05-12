@@ -2,14 +2,18 @@ package controllers;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.text.json.JsonElement;
+import models.Agency;
 import oauth.signpost.http.HttpRequest;
 import org.codehaus.jackson.JsonNode;
 import play.*;
 import play.data.Form;
 import play.mvc.*;
 
+import static play.libs.Json.fromJson;
 import static play.libs.Json.newObject;
 import static play.libs.WS.*;
+import play.libs.WS;
+import play.libs.WS.*;
 
 
 import play.db.ebean.Model;
@@ -31,7 +35,21 @@ import static play.libs.Json.toJson;
  */
 public class FeedbackController extends Controller {
     public static Result feedback() {
-        return ok(feedback.render());
+        WS.Response res = WS.url("http://localhost:9001/agency/json").get().get();
+        System.out.print(res.getBody());
+
+        JsonNode json = res.asJson();
+        List<Agency> list = new ArrayList<Agency>();
+        if (json.isArray()) {
+            Iterator<JsonNode> it = json.getElements();
+            while (it.hasNext()) {
+                JsonNode next = it.next();
+                Agency a = fromJson(next, Agency.class);
+                list.add(a);
+            }
+        }
+
+        return ok(feedback.render(list));
     }
 
     public static Result sendFeedback() {
@@ -47,6 +65,7 @@ public class FeedbackController extends Controller {
         Map<String, Object> dict = new HashMap<String, Object>();
         dict.put("text", fb.text);
         dict.put("value", fb.value);
+        dict.put("id", fb.id);
         dict.put("author", Play.application().configuration().getString("smtp.user"));
         JsonNode jsonNode = toJson(dict);
         String jsonString = jsonNode.toString();

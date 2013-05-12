@@ -10,12 +10,12 @@ import views.html.*;
 import models.Agency;
 import models.Review;
 
-import java.util.List;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
 import javax.activation.DataHandler;
 import javax.mail.*;
+
+import static play.libs.Json.toJson;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,6 +35,21 @@ public class AgencyController extends Controller {
         List<Agency> list = Agency.find.all();
 
         return ok(agency.render(list));
+    }
+    public static Result getJSONList() {
+        List<Agency> list = Agency.find.all();
+
+        List<Object> outList = new ArrayList<Object>();
+        for(Agency a: list) {
+            Map<String, Object> outA = new HashMap<String, Object>();
+            outA.put("id", a.id);
+            outA.put("name", a.name);
+            outA.put("address", a.address);
+            outA.put("trust", a.mean());
+            outList.add(outA);
+        }
+
+        return ok(toJson(outList));
     }
 
     public static Result add() {
@@ -82,7 +97,7 @@ public class AgencyController extends Controller {
         for(Integer i=0; i<count; ++i) {
             Review review = new Review();
 
-            Integer value = (variation > 0) ? mean - variation + randomGenerator.nextInt(2*variation) : mean;
+            Integer value = (variation > 0) ? mean - variation + randomGenerator.nextInt(2*variation+1) : mean;
             review.value = value;
             review.text = "Lorem ipsum dolores amet";
             review.email = "abyrvalg" + i + "@rsoi.ru";
