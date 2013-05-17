@@ -1,3 +1,4 @@
+This file is written in UTF-8. If your browser thinks differently - well...
 Репозиторий - пример чудесной работы с git svn.
 Порядок и содержание коммитов нарушено в угоду тому, чтобы залить вот это всё хоть как-то.
 Оригинальный git-репозиторий где-то тут https://github.com/pAK-76/rsoicp
