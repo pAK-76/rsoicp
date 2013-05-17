@@ -1,0 +1,39 @@
+@(agency: Agency, reviews: List[Review])
+
+@main("admin", "Отзывы агентства") {
+        Среднее: @agency.mean()
+     <table style="width: 50%; margin: 0 auto;">
+         <thead>
+            <tr>
+                <th>Количество отзывов</th>
+                <th>Средняя оценка</th>
+                <th>Отклонение, +-</th>
+                <th></th>
+            </tr>
+         </thead>
+         <tbody>
+            <form action="/agency/@agency.id/generate" method="POST">
+                <tr>
+                    <td><input name="count" value="10"/></td>
+                    <td><input name="mean" value="8" /></td>
+                    <td><input name="variation" value="2"/></td>
+                    <td><input type="submit" value="Сгенерировать" /></td>
+                </tr>
+            </form>
+
+         </tbody>
+     </table>
+
+         <h4>Отзывы об агентстве @agency.name</h4>
+        <ol>
+         @for(review <- reviews) {
+         <li>
+             <b>Автор: </b>@review.author (<a href="/review/delete/@review.id">Удалить</a>)<br/>
+             <b>Оценка: </b>@review.value<br/>
+             <b>Текст:</b><br/>
+             <pre>@review.text</pre>
+         </li>
+         }
+        </ol>
+
+}

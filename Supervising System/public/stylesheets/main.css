@@ -1,0 +1,31 @@
+html, body {
+    min-width: 1000px;
+}
+
+.clear {
+    clear: both;
+    float: none;
+}
+
+.header {
+    margin: 0 auto;
+    width: 1000px;
+    height: 120px;
+}
+.header .left {
+    width: 30%;
+    float: left;
+} .header .left img {
+    width: 120px;
+    height: 120px;
+    margin: 12px 4px;
+}
+.header .right {
+    width: 70%;
+    float: left;
+}
+
+.content {
+    margin: 0 auto;
+    width: 1000px;
+}

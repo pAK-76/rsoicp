@@ -1,8 +1,23 @@
-@main("Авторизация") {
-    
-    <form action="/login" method="POST">
-        Имя:<input name="username" /><br>
-        Пароль:<input name="password" type="password" /><br>
-        <input type="submit" value="Войти" />
-    </form>
+@main(null, "Авторизация") {
+    <div style="margin: 0 auto; width: 280px;">
+        <form action="/login" method="POST">
+            <table style="width: 100%; margin: 0 0; border: none">
+                <tbody>
+                    <tr>
+                        <td>Имя:</td>
+                        <td><input name="username" style="width: 100%;" /></td>
+                    </tr>
+                    <tr>
+                        <td>Пароль:</td>
+                        <td><input name="password" type="password" style="width: 100%;" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                             <input type="submit" value="Войти" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
 }
