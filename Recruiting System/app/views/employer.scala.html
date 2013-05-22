@@ -1,0 +1,36 @@
+@(employers: List[Employer])
+
+@main("admin", "Список работодателей") {
+<table style="width: 100%;">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Название</th>
+        <th>Email</th>
+        <th>token_secret</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <form action="employers/add" method="POST">
+        <tr>
+            <td></td>
+            <td><input name="name" placeholder="Новое агентство" /></td>
+            <td><input name="email" placeholder="Новый email" /></td>
+            <td><input name="secret" placeholder="Новый token_secret" /></td>
+            <td><input type="submit" value="Добавить"></td>
+        </tr>
+    </form>
+
+    @for(employer <- employers) {
+    <tr>
+        <td>@employer.id</td>
+        <td>@employer.name</td>
+        <td>@employer.email</td>
+        <td>@employer.secret</td>
+        <td><a href="/employers/delete/@employer.id">Удалить</a></td>
+    </tr>
+    }
+    </tbody>
+</table>
+}

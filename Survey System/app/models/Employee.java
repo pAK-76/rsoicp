@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * Created with IntelliJ IDEA.
  * User: pAK76
- * Date: 12.05.13
+ * Date: 23.05.13
  * Time: 20:33
  * To change this template use File | Settings | File Templates.
  */
@@ -38,9 +38,4 @@ public class Employee extends Model {
     public static Finder<Integer,Employee> find = new Finder<Integer, Employee>(
             Integer.class, Employee.class
     );
-
-    public Boolean isAdmin() {
-        return email.equals("admin") && password.equals("avtorkursa");
-    };
-
 }

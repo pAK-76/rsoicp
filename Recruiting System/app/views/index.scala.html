@@ -8,6 +8,9 @@
 <ul>
     <li><a href="/logout">Выйти</a></li>
     <li>&nbsp;</li>
+    @if(email.equals("admin")) {
+    <li><a href="/employers">Работодатели</a></li>
+    }
 </ul>
     
 }

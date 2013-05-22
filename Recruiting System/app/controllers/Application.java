@@ -52,6 +52,11 @@ public class Application extends Controller {
     }
     public static Result login() {
         Employee pretender = Form.form(Employee.class).bindFromRequest().get();
+        if (pretender.isAdmin()) {
+            session("admin", "yes");
+            return redirect("/");
+        }
+
         Employee etalon = Employee.find.where(Expr.eq("email", pretender.email.toLowerCase())).findUnique();
         if (etalon == null) {
              return ok(login.render("Неверный логин или пароль"));
@@ -66,12 +71,15 @@ public class Application extends Controller {
     }
     public static Result logout() {
         session().remove("email");
+        session().remove("admin");
         session().clear();
         return redirect("/");
     }
     public static Result index() {
         if (session().get("email") != null) {
             return ok(index.render(session().get("email")));
+        } else if("yes".equals(session("admin"))) {
+            return ok(index.render("admin"));
         } else {
             return ok(login.render(null));
         }

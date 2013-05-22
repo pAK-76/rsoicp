@@ -15,10 +15,14 @@ import java.util.*;
 import javax.activation.DataHandler;
 import javax.mail.*;
 
-import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.*;
+import org.codehaus.jackson.map.*;
+
 import static play.libs.Json.fromJson;
 import static play.libs.Json.parse;
 import static play.libs.Json.toJson;
+
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -146,6 +150,9 @@ public class AgencyController extends Controller {
             return redirect("/");
         }
 
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
         Properties props = new Properties();
 
         Configuration conf = Play.application().configuration();
@@ -190,6 +197,7 @@ public class AgencyController extends Controller {
                                 JsonNode node = parse(s);
 
                                 Review review = fromJson(node, Review.class);
+//                                Review review = objectMapper.readValue(node, Review.class);
                                 review.moderated = false;
                                 review.save();
                             }
