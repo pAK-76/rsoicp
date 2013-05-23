@@ -1,9 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+@(projects: List[Project])
 
-</body>
-</html>
+@main("Список проектов") {
+    <style>
+        td {
+            border: 1px solid gray;
+        }
+    </style>
+    <a href="/projects/add">Добавить</a>
+    @if(projects.size() > 0) {
+        <h2>Список проектов</h2>
+        <table style="width: 100%;">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Название</th>
+                <th>Нужно респондентов</th>
+                <th>Дата</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+        @for(project <- projects) {
+            <tr>
+                <td>@project.id</td>
+                <td><a href="/projects/@project.id">@project.name</a></td>
+                <td>@project.empCount</td>
+                <td>@project.date.format("yyyy-MM-dd")</td>
+                <td><a href="/projects/@project.id/vacancy">Создать вакансию</a></td>
+                <td><a href="/projects/delete/@project.id">Удалить</a></td>
+            </tr>
+        }
+            </tbody>
+        </table>
+    } else {
+        <div>Нет проектов</div>
+    }
+}

@@ -45,9 +45,9 @@ public class Application extends Controller {
         String email = null;
         if (session().containsKey("access_token")) {
             String token = session("access_token");
-            Token innerToken = (Token)new Model.Finder(String.class, Token.class).where("token='" + token + "'").findUnique();
+            Token innerToken = Token.find.where("token='" + token + "'").findUnique();
             if (innerToken != null) {
-                User user = (User)new Model.Finder(String.class, User.class).where("id='" + innerToken.user_id + "'").findUnique();
+                User user = User.find.where("id='" + innerToken.user_id + "'").findUnique();
                 if (user != null) {
                     email = user.email;
                 } else {
@@ -60,17 +60,6 @@ public class Application extends Controller {
         } else {
             return ok(login.render());
         }
-    }
-    
-    public static Result users() {
-    	List<User> users = new Model.Finder(String.class, User.class).all();
-  
-    	return ok(toJson(users));
-    }
-    public static Result tokens() {
-        List<User> tokens = new Model.Finder(String.class, Token.class).all();
-
-        return ok(toJson(tokens));
     }
 
     public static Result login() {
@@ -117,7 +106,7 @@ public class Application extends Controller {
         String email = infoJson.get("email").getTextValue();
         String name = infoJson.get("name").getTextValue();
 
-        List<User> existing = new Model.Finder(String.class, User.class).where("email='" + email + "'").findList();
+        List<User> existing = User.find.where("email='" + email + "'").findList();
         User curUser;
         if (existing.size() > 0) {
             curUser = existing.get(0);
@@ -141,20 +130,9 @@ public class Application extends Controller {
     {
         String token = session("access_token");
         if (token != null) {
-            ((Model)new Model.Finder(String.class, Token.class).where(Expr.eq("token", token)).findUnique()).delete();
+            (Token.find.where(Expr.eq("token", token)).findUnique()).delete();
         }
         session().remove("access_token");
         return redirect("/");
     }
-
-
-    public static Result sign() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("Some", "value");
-        map.put("Another", "value");
-        Async async = new Async("Avallakh1@gmail.com", map);
-        async.send();
-        return ok();
-    }
-  
 }

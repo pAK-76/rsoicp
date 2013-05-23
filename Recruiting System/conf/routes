@@ -16,5 +16,8 @@ GET     /employers                  controllers.EmployerController.employers()
 POST    /employers/add              controllers.EmployerController.addEmployer()
 GET     /employers/delete/:id       controllers.EmployerController.deleteEmployer(id: Integer)
 
+GET     /vacancies                  controllers.VacancyController.vacancies()
+GET     /vacancies/:id/toggle       controllers.VacancyController.toggle(id: Integer)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -69,10 +69,9 @@ public class FeedbackController extends Controller {
         dict.put("value", fb.value);
         dict.put("agencyId", fb.id);
 
-//        Async async = new Async(play.Play.application().configuration().getString("supervising.email"), dict);
-        Async async = new Async("mbox1497-00@dev.iu7.bmstu.ru", dict);
+        Async async = new Async("Review", play.Play.application().configuration().getString("supervising.email"), dict, false);
         async.send();
 
-        return ok("Sent successfully");
+        return redirect("/projects");
     }
 }

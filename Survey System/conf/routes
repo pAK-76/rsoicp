@@ -4,8 +4,6 @@
 
 # Home page
 GET     /                           controllers.Application.index()
-GET		/users						controllers.Application.users()
-GET     /tokens                     controllers.Application.tokens()
 
 GET     /feedback                   controllers.FeedbackController.feedback()
 POST    /feedback                   controllers.FeedbackController.sendFeedback()
@@ -14,7 +12,18 @@ GET    /auth/google/                controllers.Application.loginWithGoogleCode(
 GET    /auth/google/state           controllers.Application.login()
 GET    /auth/logout                 controllers.Application.logout()
 
+GET     /projects                   controllers.ProjectController.projects()
+GET     /projects/add               controllers.ProjectController.addProjectForm()
+GET     /projects/:id               controllers.ProjectController.editProjectForm(id: Integer)
+GET     /projects/:id/vacancy       controllers.ProjectController.createVacancy(id: Integer)
+POST    /projects/save              controllers.ProjectController.saveProject()
+GET     /projects/delete/:id        controllers.ProjectController.deleteProject(id: Integer)
+
+GET     /employees                   controllers.EmployeeController.employees()
+GET     /employees/add               controllers.EmployeeController.addEmployeeForm()
+GET     /employees/:id               controllers.EmployeeController.editEmployeeForm(id: Integer)
+POST    /employees/save              controllers.EmployeeController.saveEmployee()
+GET     /employees/delete/:id        controllers.EmployeeController.deleteEmployee(id: Integer)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
-
-GET     /sign                       controllers.Application.sign()

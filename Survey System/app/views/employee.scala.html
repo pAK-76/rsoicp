@@ -1,0 +1,50 @@
+@(employee: Employee)
+
+@main("Респондент") {
+<form action="/employees/save" method="POST">
+@if(employee!=null){
+    <input type="hidden" name="id" value="@employee.id" />
+}
+    <table style="width: 60%; margin: 0 auto;">
+        <tbody>
+        <tr>
+            <td class="ralign">Email:</td>
+            <td><input name="email" @if(employee!=null){value="@employee.email"} /></td>
+        </tr>
+        <tr>
+            <td class="ralign">Имя:</td>
+            <td><input type="text" name="firstName" @if(employee!=null){value="@employee.firstName"} /></td>
+        </tr>
+        <tr>
+            <td class="ralign">Фамилия:</td>
+            <td><input type="text" name="lastName" @if(employee!=null){value="@employee.lastName"} /></td>
+        </tr>
+        <tr>
+            <td class="ralign">Телефон:</td>
+            <td><input name="phone" @if(employee!=null){value="@employee.phone"} /></td>
+        </tr>
+        <tr>
+            <td class="ralign">Дата рождения:</td>
+            <td><input type="date" name="birthDate"  @if(employee!=null){value="@employee.birthDate.format("yyyy-MM-dd")"}/></td>
+        </tr>
+        <tr>
+            <td class="ralign">Город:</td>
+            <td><input type="text" name="city" @if(employee!=null){value="@employee.city"} /></td>
+        </tr>
+        <tr>
+            <td class="ralign">Профессия:</td>
+            <td><input type="text" name="job" @if(employee!=null){value="@employee.job"} /></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <textarea style="width: 100%; resize: none;" name="features" placeholder="Ключевые навыки">@if(employee!=null){@employee.features}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="ralign">&nbsp;</td>
+            <td><input type="submit" value="Сохранить респондента" /></td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+}

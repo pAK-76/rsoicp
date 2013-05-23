@@ -20,6 +20,7 @@ public class Employee extends Model {
     public Integer id;
 
     public String email;
+    public String phone;
     public String salt;
     public String password;
 

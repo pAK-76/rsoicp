@@ -1,0 +1,28 @@
+@(email: String, vacancies: List[PersVacancy])
+
+@main(email, "Вакансии") {
+@if(vacancies.size() == 0) {
+     Нет вакансий
+} else {
+     <table>
+         <thead>
+         <tr>
+             <th>Название</th>
+             <th>Дата</th>
+             <th>Требования</th>
+             <th></th>
+         </tr>
+         </thead>
+         <tbody>
+         @for(vac <- vacancies) {
+              <tr>
+                  <td>@vac.projectName</td>
+                  <td>@vac.date.format("yyyy-MM-dd")</td>
+                  <td><pre>@vac.requirements</pre></td>
+                  <td><a href="/vacancies/@vac.id/toggle">@if(vac.isChecked){Интересует}else{НЕ интересует}</a></td>
+              </tr>
+         }
+         </tbody>
+     </table>
+}
+}

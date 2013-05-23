@@ -1,9 +1,51 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+@(project: Project)
 
-</body>
-</html>
+@main("Проект") {
+<form action="/projects/save" method="POST">
+    @if(project!=null){
+    <input type="hidden" name="id" value="@project.id" />
+    }
+    <table style="width: 60%; margin: 0 auto;">
+        <tbody>
+        <tr>
+            <td class="ralign">Название:</td>
+            <td><input name="name" @if(project!=null){value="@project.name"} /></td>
+        </tr>
+        <tr>
+            <td class="ralign">Дата проведения:</td>
+            <td><input type="datetime" name="date" @if(project!=null){value="@project.date.format("yyyy-MM-dd")"}/></td>
+        </tr>
+        <tr>
+            <td class="ralign">Кол-во респондентов:</td>
+            <td><input type="text" name="empCount" @if(project!=null){value="@project.empCount"}/></td>
+        </tr>
+        <tr>
+            <td class="ralign">Респонденты не младше:</td>
+            <td><input type="text" name="startAge" @if(project!=null){value="@project.startAge"}/></td>
+        </tr>
+        <tr>
+            <td class="ralign">Респонденты не старше:</td>
+            <td><input type="text" name="endAge" @if(project!=null){value="@project.endAge"}/></td>
+        </tr>
+        <tr>
+            <td class="ralign">Профессия респондентов:</td>
+            <td><input type="text" name="job" @if(project!=null){value="@project.job"}/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <textarea style="width: 100%; resize: none;" name="reward" placeholder="Вознаграждение">@if(project!=null){@project.reward}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <textarea style="width: 100%; resize: none;" name="features" placeholder="Ключевые навыки">@if(project!=null){@project.features}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="ralign">&nbsp;</td>
+            <td><input type="submit" value="Сохранить проект" /></td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+}
