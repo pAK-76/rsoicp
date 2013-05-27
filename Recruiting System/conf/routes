@@ -18,6 +18,7 @@ GET     /employers/delete/:id       controllers.EmployerController.deleteEmploye
 
 GET     /vacancies                  controllers.VacancyController.vacancies()
 GET     /vacancies/:id/toggle       controllers.VacancyController.toggle(id: Integer)
+GET     /vacancies/responses        controllers.VacancyController.responses(author: String, id: Integer, time: String, signature: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

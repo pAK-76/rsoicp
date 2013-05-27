@@ -2,12 +2,11 @@ package controllers;
 
 import Transport.Signer;
 import com.avaje.ebean.Expr;
-import models.PersVacancy;
-import models.Vacancy;
-import models.Vacancy_Employee;
+import models.*;
 import org.codehaus.jackson.JsonNode;
 import play.Configuration;
 import play.Play;
+import play.db.ebean.Transactional;
 import play.mvc.*;
 
 import java.text.DateFormat;
@@ -18,6 +17,8 @@ import views.html.*;
 
 import static play.libs.Json.fromJson;
 import static play.libs.Json.parse;
+import static play.libs.Json.toJson;
+
 import javax.mail.*;
 
 /**
@@ -28,10 +29,130 @@ import javax.mail.*;
  * To change this template use File | Settings | File Templates.
  */
 public class VacancyController extends Controller {
-    public static Integer readMessage;
+
+    public static void createVacancy(Message message) {
+        try {
+            Multipart multipart = (Multipart) message.getContent();
+
+            for (int x = 0; x < multipart.getCount(); x++) {
+                BodyPart bodyPart = multipart.getBodyPart(x);
+
+                String disposition = bodyPart.getDisposition();
+
+                if (disposition != null && (disposition.equals(BodyPart.ATTACHMENT))) {
+                    // Do nothing, there should be no disposition
+                } else {
+
+                    String s = (String) bodyPart.getContent();
+                    System.out.println(s);
+
+                    JsonNode node = parse(s);
+                    Map<String, Object> params = new TreeMap<String, Object>();
+                    String signature = new String();
+                    Iterator<String> iter = node.getFieldNames();
+                    while(iter.hasNext()) {
+                        String key = iter.next();
+                        if (key.equals("signature")) {
+                            signature = node.get(key).getTextValue();
+                        } else {
+                            JsonNode cur = node.get(key);
+                            if (cur.isTextual()) {
+                                params.put(key, cur.asText());
+                            }  else if (cur.isInt()) {
+                                params.put(key, cur.asInt());
+                            }
+                        }
+                    }
+                    Integer empId = Signer.checkSignature(params, signature);
+                    if (empId != -1) {
+                        System.out.println("Valid");
+                        Integer inner_id = (Integer)params.get("id");
+                        Vacancy vac = Vacancy.find.where(Expr.and(Expr.eq("inner_id", inner_id), Expr.eq("employerId", empId))).findUnique();
+                        if (vac != null) {
+                            System.out.println("Duplicate vacancy for project");
+                            return;
+                        }
+                        vac = new Vacancy();
+                        vac.inner_id = inner_id;
+                        vac.employerId = empId;
+                        vac.requirements = (String)params.get("requirements");
+                        vac.date = new SimpleDateFormat("yyyy-MM-dd").parse((String)params.get("date"));
+                        vac.projectName =  (String)params.get("projectName");
+                        vac.save();
+                    } else {
+                        System.out.println("Invalid");
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    @Transactional
+    public static void deleteVacancy(Message message) {
+        try {
+            Multipart multipart = (Multipart) message.getContent();
+
+            for (int x = 0; x < multipart.getCount(); x++) {
+                BodyPart bodyPart = multipart.getBodyPart(x);
+
+                String disposition = bodyPart.getDisposition();
+
+                if (disposition != null && (disposition.equals(BodyPart.ATTACHMENT))) {
+                    // Do nothing, there should be no disposition
+                } else {
+
+                    String s = (String) bodyPart.getContent();
+                    System.out.println(s);
+
+                    JsonNode node = parse(s);
+                    Map<String, Object> params = new TreeMap<String, Object>();
+                    String signature = new String();
+                    Iterator<String> iter = node.getFieldNames();
+                    while(iter.hasNext()) {
+                        String key = iter.next();
+                        if (key.equals("signature")) {
+                            signature = node.get(key).getTextValue();
+                        } else {
+                            JsonNode cur = node.get(key);
+                            if (cur.isTextual()) {
+                                params.put(key, cur.asText());
+                            }  else if (cur.isInt()) {
+                                params.put(key, cur.asInt());
+                            }
+                        }
+                    }
+                    Integer empId = Signer.checkSignature(params, signature);
+                    if (empId != -1) {
+                        Integer inner_id = (Integer)params.get("id");
+                        Vacancy vac = Vacancy.find.where(Expr.and(Expr.eq("inner_id", inner_id), Expr.eq("employerId", empId))).findUnique();
+                        List<Vacancy_Employee> responses =  Vacancy_Employee.find.where(Expr.eq("vacancyId", vac.id)).findList();
+                        for (Vacancy_Employee resp: responses) {
+                            resp.delete();
+                        }
+                        vac.delete();
+                        System.out.println("Valid, deleted vacancy and all responses");
+                    } else {
+                        System.out.println("Invalid");
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
 
     public static void updateVacancies() {
-//        readMessage = -1;
+        Integer lastChecked = Globals.getValue("checkedMail");
+        Long nowMillis = System.currentTimeMillis()/1000L;
+        Integer now = nowMillis.intValue();
+
+        if (lastChecked != null && now-lastChecked < 120) return;
+
+        Integer readMessage = Globals.getValue("readMessage");
+        System.out.println(String.format("readMessage: %d", readMessage));
+
         Properties props = new Properties();
 
         Configuration conf = Play.application().configuration();
@@ -59,57 +180,13 @@ public class VacancyController extends Controller {
                     continue;
                 }
                 if (messages[i].getSubject().equals("Create vacancy")) {
-                    try {
-                        Multipart multipart = (Multipart) messages[i].getContent();
-
-                        for (int x = 0; x < multipart.getCount(); x++) {
-                            BodyPart bodyPart = multipart.getBodyPart(x);
-
-                            String disposition = bodyPart.getDisposition();
-
-                            if (disposition != null && (disposition.equals(BodyPart.ATTACHMENT))) {
-                                // Do nothing, there should be no disposition
-                            } else {
-
-                                String s = (String) bodyPart.getContent();
-                                System.out.println(s);
-
-                                JsonNode node = parse(s);
-                                Map<String, Object> params = new TreeMap<>();
-                                String signature = new String();
-                                Iterator<String> iter = node.getFieldNames();
-                                while(iter.hasNext()) {
-                                    String key = iter.next();
-                                    if (key.equals("signature")) {
-                                        signature = node.get(key).getTextValue();
-                                    } else {
-                                        params.put(key, node.get(key).getTextValue());
-                                    }
-                                }
-                                Integer empId = Signer.checkSignature(params, signature);
-                                if (empId != -1) {
-                                    System.out.println("Valid");
-                                    Vacancy vac = new Vacancy();
-                                    vac.employerId = empId;
-                                    vac.requirements = (String)params.get("requirements");
-                                    vac.date = new SimpleDateFormat("yyyy-MM-dd").parse((String)params.get("date"));
-                                    vac.projectName =  (String)params.get("projectName");
-                                    vac.save();
-                                } else {
-                                    System.out.println("Invalid");
-                                }
-
-                                if (messages[i].getMessageNumber() > readMessage) {
-                                    readMessage = messages[i].getMessageNumber();
-                                }
-                            }
-                        }
-                    } catch (Exception ex) {
-                        System.out.println(ex.getMessage());
-                    }
+                    VacancyController.createVacancy(messages[i]);
+                } else if (messages[i].getSubject().equals("Delete vacancy")) {
+                    VacancyController.deleteVacancy(messages[i]);
                 }
-                if (readMessage==null || messages[i].getMessageNumber() > readMessage) {
+                if (readMessage == null || messages[i].getMessageNumber() > readMessage) {
                     readMessage = messages[i].getMessageNumber();
+                    Globals.putValue("readMessage", readMessage);
                 }
             }
             inbox.close(false);
@@ -118,7 +195,39 @@ public class VacancyController extends Controller {
             System.out.println(ex.getMessage());
         }
 
+        Globals.putValue("checkedMail", now);
         System.out.println("Finished updating");
+    }
+
+    public static Result responses(String author, Integer id, String time, String signature) {
+        String url = "http://" + request().host() + request().path();
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("author", author);
+        params.put("id", id);
+        params.put("time", time);
+
+        Integer empId = Signer.checkSignature(url, params, signature);
+        if (empId == -1) {
+            return Results.forbidden();
+        }
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        VacancyController.updateVacancies();
+        Vacancy vac = Vacancy.find.where(Expr.and(Expr.eq("inner_id", id), Expr.eq("employerId", empId))).findUnique();
+        if (vac == null) {
+            result.put("status", "closed");
+            return ok(toJson(result));
+        }
+        List<Vacancy_Employee> responses = Vacancy_Employee.find.where(Expr.eq("vacancyId", vac.id)).findList();
+        List<Employee> resumes = new ArrayList<Employee>();
+        for(Vacancy_Employee resp: responses) {
+            Employee emp = Employee.find.byId(resp.employeeId);
+            resumes.add(emp);
+        }
+        result.put("responses", resumes);
+        result.put("status", "ok");
+        return ok(toJson(result));
     }
 
     public static Result vacancies() {
@@ -128,7 +237,7 @@ public class VacancyController extends Controller {
         Integer userId = Integer.parseInt(session("id"));
 
         List<Vacancy> list = Vacancy.find.all();
-        List<PersVacancy> list2 = new ArrayList<>();
+        List<PersVacancy> list2 = new ArrayList<PersVacancy>();
         for (Vacancy vac: list) {
             PersVacancy pv = new PersVacancy(vac);
             pv.isChecked = Vacancy_Employee.find.where(Expr.and(Expr.eq("vacancyId", vac.id), Expr.eq("employeeId", userId))).findRowCount() == 1;

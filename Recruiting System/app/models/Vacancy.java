@@ -18,6 +18,7 @@ public class Vacancy extends Model {
     @Id
     public Integer id;
 
+    public Integer inner_id;
     public Integer employerId;
     public String projectName;
     public Date date;

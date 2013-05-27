@@ -1,0 +1,34 @@
+@(responses: List[Employee])
+
+@main("Список откликов") {
+<style>
+    td {
+    border: 1px solid gray;
+    }
+</style>
+@if(responses.size() > 0) {
+<h2>Список откликнувшихся респондентов</h2>
+<table style="width: 100%;">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Фамилия, имя</th>
+        <th>Профессия</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @for(employee <- responses) {
+    <tr>
+        <td>@employee.id</td>
+        <td><a href="/employees/@employee.id">@employee.lastName @employee.firstName</a></td>
+        <td>@employee.job</td>
+        <td><a href="/employees/delete/@employee.id">Удалить</a></td>
+    </tr>
+    }
+    </tbody>
+</table>
+} else {
+<div>Нет откликов на эту вакансию</div>
+}
+}

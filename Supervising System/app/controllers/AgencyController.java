@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Expr;
+import models.Globals;
 import play.Configuration;
 import play.Play;
 import play.data.DynamicForm;
@@ -32,7 +33,6 @@ import static play.libs.Json.toJson;
  * To change this template use File | Settings | File Templates.
  */
 public class AgencyController extends Controller {
-    public static Integer readMessage;
 
     public static Result getList() {
         if (!session().containsKey("auth"))      {
@@ -52,6 +52,7 @@ public class AgencyController extends Controller {
             outA.put("id", a.id);
             outA.put("name", a.name);
             outA.put("address", a.address);
+            outA.put("email", a.email);
             outA.put("trust", a.mean());
             outList.add(outA);
         }
@@ -150,6 +151,9 @@ public class AgencyController extends Controller {
             return redirect("/");
         }
 
+        Integer readMessage = (Integer)Globals.getValue("readMessage");
+        System.out.println(String.format("readMessage: %d", readMessage));
+
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -208,6 +212,7 @@ public class AgencyController extends Controller {
                 }
                 if (readMessage==null || messages[i].getMessageNumber() > readMessage) {
                     readMessage = messages[i].getMessageNumber();
+                    Globals.putValue("readMessage", readMessage);
                 }
             }
             inbox.close(false);

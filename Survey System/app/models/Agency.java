@@ -13,7 +13,7 @@ import javax.persistence.Id;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-public class Agency {
+public class Agency extends Model {
     @Id
     public Integer id;
 
@@ -21,4 +21,8 @@ public class Agency {
     public String address;
     public String email;
     public int trust;
+
+    public static Model.Finder<Integer,Agency> find = new Model.Finder<Integer, Agency>(
+            Integer.class, Agency.class
+    );
 }
