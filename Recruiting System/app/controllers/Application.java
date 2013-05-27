@@ -45,7 +45,7 @@ public class Application extends Controller {
         employee.password = DigestUtils.shaHex(employee.password + employee.salt);
         employee.save();
 
-        return ok();
+        return redirect("/");
     }
     public static Result registerForm() {
         return ok(register.render(null, null));
@@ -64,6 +64,7 @@ public class Application extends Controller {
         String hash = DigestUtils.shaHex(pretender.password + etalon.salt);
         if (hash.equals(etalon.password)) {
             session("email", pretender.email);
+            session("id", String.format("%d", etalon.id));
             return redirect("/");
         } else {
             return ok(login.render("Неверный логин или пароль"));

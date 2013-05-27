@@ -2,15 +2,19 @@
 
 @main("admin", "Модерация отзывов") {
 <ol>
-    @for(review <- reviews) {
-    <li>
-        <b>Система: </b>@review.agencyId<br />
-        <b>Автор: </b>@review.author<br/>
-        <b>Оценка: </b>@review.value<br/>
-        <b>Текст:</b><br/>
-        <pre>@review.text</pre>
-        <a href="/review/approve/@review.id">Одобрить</a> или <a href="/review/delete/@review.id?redirect=/feedback">Удалить</a>
-    </li>
+    @if(reviews.size() > 0) {
+        @for(review <- reviews) {
+        <li>
+            <b>Система: </b>@review.agencyId<br />
+            <b>Автор: </b>@review.author<br/>
+            <b>Оценка: </b>@review.value<br/>
+            <b>Текст:</b><br/>
+            <pre>@review.text</pre>
+            <a href="/review/approve/@review.id">Одобрить</a> или <a href="/review/delete/@review.id?redirect=/feedback">Удалить</a>
+        </li>
+        }
+    } else {
+        <div>Нет отзывов для модерации</div>
     }
 </ol>
 }

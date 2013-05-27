@@ -14,27 +14,31 @@
             </tr>
             <tr>
                 <td class="ralign">Имя:</td>
-                <td><input type="text" name="firstName" /></td>
+                <td><input type="text" name="firstName" @if(employee!=null){value="@employee.firstName"} /></td>
             </tr>
             <tr>
                 <td class="ralign">Фамилия:</td>
-                <td><input type="text" name="lastName" /></td>
+                <td><input type="text" name="lastName" @if(employee!=null){value="@employee.lastName"} /></td>
+            </tr>
+            <tr>
+                <td class="ralign">Телефон:</td>
+                <td><input name="phone" @if(employee!=null){value="@employee.phone"} /></td>
             </tr>
             <tr>
                 <td class="ralign">Дата рождения:</td>
-                <td><input type="date" name="birthDate"  @if(employee!=null){value="@employee.birthDate"}/></td>
+                <td><input type="date" name="birthDate"  @if(employee!=null){value="@employee.birthDate.format("yyyy-MM-dd")"}/></td>
             </tr>
             <tr>
                 <td class="ralign">Город:</td>
-                <td><input type="text" name="city" /></td>
+                <td><input type="text" name="city" @if(employee!=null){value="@employee.city"} /></td>
             </tr>
             <tr>
                 <td class="ralign">Профессия:</td>
-                <td><input type="text" name="job" /></td>
+                <td><input type="text" name="job" @if(employee!=null){value="@employee.job"} /></td>
             </tr>
             <tr>
                 <td colspan="2">
-                    <textarea style="width: 100%; resize: none;" name="features" placeholder="Ключевые навыки"></textarea>
+                    <textarea style="width: 100%; resize: none;" name="features" placeholder="Ключевые навыки">@if(employee!=null){@employee.features}</textarea>
                 </td>
             </tr>
             @if(error!=null) {

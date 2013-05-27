@@ -1,10 +1,13 @@
 package models;
 
+import org.joda.time.DateTime;
 import play.db.ebean.Model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +23,8 @@ public class Project extends Model {
     public Integer authorId;
 
     public String name;
-    public String date;
+    public Date date;
+    public Integer empCount;
     public Integer startAge, endAge;
     public String job;
 
@@ -29,4 +33,8 @@ public class Project extends Model {
 
     @Column(length = 1000)
     public String reward;
+
+    public static Finder<Integer,Project> find = new Finder<Integer, Project>(
+            Integer.class, Project.class
+    );
 }

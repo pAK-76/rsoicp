@@ -20,11 +20,11 @@ public class Employee extends Model {
     public Integer id;
 
     public String email;
-    public String salt;
-    public String password;
+    public String phone;
 
     public String firstName;
     public String lastName;
+    public Boolean isTemporary;
 
     public String city;
 
@@ -34,6 +34,8 @@ public class Employee extends Model {
 
     @Column(length=2000)
     public String features;
+
+    public Integer agencyId;
 
     public static Finder<Integer,Employee> find = new Finder<Integer, Employee>(
             Integer.class, Employee.class

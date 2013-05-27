@@ -12,4 +12,9 @@ public class User extends Model {
 	
 	public String email;
 	public String name;
+
+
+    public static Finder<Integer,User> find = new Finder<Integer, User>(
+            Integer.class, User.class
+    );
 }
