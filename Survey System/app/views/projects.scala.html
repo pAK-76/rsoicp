@@ -18,6 +18,7 @@
                 <th>Дата</th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -27,7 +28,8 @@
                 <td><a href="/projects/@project.id">@project.name</a></td>
                 <td>@project.empCount</td>
                 <td>@project.date.format("yyyy-MM-dd")</td>
-                <td><a href="/projects/@project.id/vacancy">Создать вакансию</a></td>
+                <td><a href="/projects/@project.id/cvacancy">Создать вакансии</a></td>
+                <td><a href="/projects/@project.id/dvacancy">Удалить вакансии</a></td>
                 <td><a href="/projects/delete/@project.id">Удалить</a></td>
             </tr>
         }

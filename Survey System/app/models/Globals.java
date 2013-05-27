@@ -19,23 +19,24 @@ public class Globals extends Model {
     public Integer id;
 
     public String key;
-    public Object value;
+    public Integer value;
 
     public static Finder<Integer,Globals> find = new Finder<Integer, Globals>(
             Integer.class, Globals.class
     );
 
-    public static Object getValue(String key) {
+    public static Integer getValue(String key) {
         Globals item = Globals.find.where(Expr.eq("key", key)).findUnique();
-        return item.value;
+        return (item != null) ? item.value : null;
     }
-    public static void putValue(String key, Object value) {
+    public static void putValue(String key, Integer value) {
         Globals item = Globals.find.where(Expr.eq("key", key)).findUnique();
         if (item == null) {
             item = new Globals();
             item.key = key;
         }
         item.value = value;
+        System.out.println(String.format("Saving key: %s", key));
         item.save();
     }
 }

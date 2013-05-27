@@ -6,6 +6,7 @@ import com.typesafe.plugin.MailerAPI;
 import com.typesafe.plugin.MailerPlugin;
 import org.codehaus.jackson.JsonNode;
 
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,23 +29,8 @@ public class Async {
     public Async(String theme, String to, Map<String, Object> params, Boolean shouldSign) {
         _to = to;
         _theme = theme;
-        _params = new TreeMap<>(params);
+        _params = new TreeMap<String, Object>(params);
         _shouldSign = shouldSign;
-    }
-
-    public static String stringToSign(Map<String, Object> params) {
-        String result = "";
-        Boolean first = true;
-        for(String i : params.keySet()) {
-            if (first) {
-                first = false;
-            } else {
-                result += "&";
-            }
-            result += i + "=" + params.get(i);
-        }
-        System.out.println(result.length());
-        return result;
     }
 
      public Boolean send() {
@@ -58,7 +44,7 @@ public class Async {
          _params.put("author", from);
          if (_shouldSign) {
             _params.put("time", String.format("%d", System.currentTimeMillis() / 1000L));
-            _params.put("signature", Signer.signature(Async.stringToSign(_params)));
+            _params.put("signature", Signer.signature(Signer.stringToSign(_params)));
          }
 
          JsonNode jsonNode = toJson(_params);

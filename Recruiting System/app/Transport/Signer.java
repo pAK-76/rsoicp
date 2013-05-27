@@ -26,7 +26,7 @@ public class Signer {
             } else {
                 result += "&";
             }
-            result += i + "=" + params.get(i);
+            result += i + "=" + params.get(i).toString();
         }
         System.out.println(result.length());
         return result;
@@ -61,4 +61,34 @@ public class Signer {
         }
         return result;
     }
+
+    public static Integer checkSignature(String url, Map<String, Object> params, String signature) {
+        Integer result = -1;
+
+        try {
+            String email = (String)params.get("author");
+            Employer employer = Employer.find.where(Expr.eq("email", email)).findUnique();
+            String key = employer.secret;
+
+            String stringToSign = url + "?" + Signer.stringToSign(params);
+            System.out.println("Stringtosign: " + stringToSign);
+
+            SecretKeySpec secretKey = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(secretKey);
+            byte [] hmacData = mac.doFinal(stringToSign.getBytes("UTF-8"));
+            String shouldBe = Base64.encode(hmacData);
+            System.out.println("Should be: " + shouldBe);
+            System.out.println("Signature: " + signature);
+
+            if (shouldBe.equals(signature)) {
+                result = employer.id;
+            }
+        }
+        catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return result;
+    }
+
 }
