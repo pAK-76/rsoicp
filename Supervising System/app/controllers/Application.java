@@ -20,6 +20,7 @@ public class Application extends Controller {
     public static Result login() {
         Form<User> form = Form.form(User.class);
         User user = form.bindFromRequest().get();
+
 //        return ok(user.username + ":" + user.password);
         if (user.authenticate()) {
             session("auth", "authed");

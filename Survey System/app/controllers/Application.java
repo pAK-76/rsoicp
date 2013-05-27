@@ -2,8 +2,11 @@ package controllers;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.text.json.JsonElement;
+import com.ning.http.util.Base64;
 import oauth.signpost.http.HttpRequest;
 import org.codehaus.jackson.JsonNode;
+import org.jboss.netty.handler.codec.base64.Base64Decoder;
+import org.jboss.netty.handler.codec.base64.Base64Encoder;
 import play.*;
 import play.api.mvc.Request$;
 import play.data.DynamicForm;
@@ -22,11 +25,18 @@ import play.api.libs.Codecs.*;
 import play.db.ebean.Model;
 
 import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.util.*;
 
 import scala.concurrent.Future;
 import play.libs.WS.*;
+import transport.Async;
 import views.html.*;
+
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 import static play.libs.Json.toJson;
 
 public class Application extends Controller {
@@ -138,6 +148,13 @@ public class Application extends Controller {
     }
 
 
-
+    public static Result sign() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("Some", "value");
+        map.put("Another", "value");
+        Async async = new Async("Avallakh1@gmail.com", map);
+        async.send();
+        return ok();
+    }
   
 }

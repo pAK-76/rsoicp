@@ -15,7 +15,7 @@ GET     /agency/:id                 controllers.AgencyController.reviews(id: Int
 
 POST    /agency/:id/generate        controllers.AgencyController.generate(id: Integer)
 GET     /review/delete/:id          controllers.AgencyController.deleteReview(id: Integer)
-GET     /review/approve/:id          controllers.AgencyController.approveReview(id: Integer)
+GET     /review/approve/:id         controllers.AgencyController.approveReview(id: Integer)
 
 GET     /feedback                   controllers.AgencyController.updateReviews()
 

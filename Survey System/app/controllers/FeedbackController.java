@@ -23,6 +23,8 @@ import javax.mail.*;
 
 import java.net.URLEncoder;
 import java.util.*;
+
+import transport.Async;
 import views.html.*;
 import static play.libs.Json.toJson;
 
@@ -35,18 +37,21 @@ import static play.libs.Json.toJson;
  */
 public class FeedbackController extends Controller {
     public static Result feedback() {
-        WS.Response res = WS.url("http://localhost:9001/agency/json").get().get();
-        System.out.print(res.getBody());
-
-        JsonNode json = res.asJson();
         List<Agency> list = new ArrayList<Agency>();
-        if (json.isArray()) {
-            Iterator<JsonNode> it = json.getElements();
-            while (it.hasNext()) {
-                JsonNode next = it.next();
-                Agency a = fromJson(next, Agency.class);
-                list.add(a);
+        try {
+            WS.Response res = WS.url("http://localhost:9001/agency/json").get().get();
+            JsonNode json = res.asJson();
+
+            if (json.isArray()) {
+                Iterator<JsonNode> it = json.getElements();
+                while (it.hasNext()) {
+                    JsonNode next = it.next();
+                    Agency a = fromJson(next, Agency.class);
+                    list.add(a);
+                }
             }
+        } catch (Exception ex) {
+
         }
 
         return ok(feedback.render(list));
@@ -59,20 +64,15 @@ public class FeedbackController extends Controller {
         Form<Feedback> form = Form.form(Feedback.class);
         Feedback fb = form.bindFromRequest().get();
 
-        MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
-        mail.setSubject("Review");
-        mail.addRecipient("mbox1497-00@dev.iu7.bmstu.ru");
-
-        mail.addFrom(Play.application().configuration().getString("smtp.user"));
-
         Map<String, Object> dict = new HashMap<String, Object>();
         dict.put("text", fb.text);
         dict.put("value", fb.value);
         dict.put("agencyId", fb.id);
-        dict.put("author", Play.application().configuration().getString("smtp.user"));
-        JsonNode jsonNode = toJson(dict);
-        String jsonString = jsonNode.toString();
-        mail.send(jsonString);
+
+//        Async async = new Async(play.Play.application().configuration().getString("supervising.email"), dict);
+        Async async = new Async("mbox1497-00@dev.iu7.bmstu.ru", dict);
+        async.send();
+
         return ok("Sent successfully");
     }
 }
